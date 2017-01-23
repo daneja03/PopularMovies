@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference android:key="@string/value_field_sort_preference"
+        android:title="@string/display_field_sort_by"
+        android:entries="@array/displayFields"
+        android:entryValues="@array/valueFields"></ListPreference>
+</PreferenceScreen>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="displayFields">
+        <item>@string/display_field_popularity</item>
+        <item>@string/display_field_userrating</item>
+    </string-array>
+    <string-array name="valueFields">
+        <item>@string/value_field_popularity</item>
+        <item>@string/value_field_user_rating</item>
+    </string-array>
+</resources>

@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="menu_title">Settings</string>
+    <string name="value_field_popularity" translatable="false">popularity</string>
+    <string name="value_field_user_rating" translatable="false">toprated</string>
+    <string name="value_field_sort_preference" translatable="false">sortorder</string>
+    <string name="display_field_popularity">Popularity</string>
+    <string name="display_field_userrating">Top Rated</string>
+    <string name="display_field_sort_by">Sort by:</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="rating_heading">Rating:</string>
+    <string name="votes_heading">Votes:</string>
+    <string name="synopsis_heading">Synopsis</string>
+    <string name="no_movies_found">No Movies Found</string>
+    <string name="prefix_released">Released: </string>
+</resources>
