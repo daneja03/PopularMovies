@@ -31,7 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
         private void bindPreferenceSummaryToValue(Preference preference) {
             preference.setOnPreferenceChangeListener(this);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
-            String preferenceValue = preferences.getString(preference.getKey(), getString(R.string.display_field_popularity));
+            String preferenceValue = preferences.getString(preference.getKey(), getString(R.string.value_field_popularity));
             onPreferenceChange(preference, preferenceValue);
         }
 
