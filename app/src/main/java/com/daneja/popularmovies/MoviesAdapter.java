@@ -30,20 +30,28 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View movieGridItemView = convertView;
+        ViewHolder viewHolder;
         if (movieGridItemView == null) {
             movieGridItemView = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.imgMovieThumbnail = (ImageView) movieGridItemView.findViewById(R.id.img_movie_thumbnail);
+            movieGridItemView.setTag(viewHolder);
+        }else {
+            viewHolder = (ViewHolder) movieGridItemView.getTag();
         }
 
         Movie currentMovieItem = getItem(position);
-
-        ImageView imgMovieThumbnail = (ImageView) movieGridItemView.findViewById(R.id.img_movie_thumbnail);
 
         Picasso.with(context)
                 .load(currentMovieItem.getMoviePosterUrl())
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
-                .into(imgMovieThumbnail);
+                .into(viewHolder.imgMovieThumbnail);
 
         return movieGridItemView;
+    }
+
+    static class ViewHolder{
+        ImageView imgMovieThumbnail;
     }
 }
