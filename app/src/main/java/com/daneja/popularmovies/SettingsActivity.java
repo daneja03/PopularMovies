@@ -44,10 +44,10 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String stringValue = newValue.toString();
-            if (stringValue == getString(R.string.value_field_popularity)) {
-                preference.setSummary(getString(R.string.display_field_popularity));
-            } else {
+            if (stringValue == getString(R.string.value_field_user_rating)) {
                 preference.setSummary(getString(R.string.display_field_userrating));
+            } else {
+                preference.setSummary(getString(R.string.display_field_popularity));
             }
             return true;
         }
