@@ -12,6 +12,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by deepakaneja.cs on 1/22/2017.
  * Custom ArrayAdapter for the Movie
@@ -33,8 +36,7 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
         ViewHolder viewHolder;
         if (movieGridItemView == null) {
             movieGridItemView = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.imgMovieThumbnail = (ImageView) movieGridItemView.findViewById(R.id.img_movie_thumbnail);
+            viewHolder = new ViewHolder(movieGridItemView);
             movieGridItemView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) movieGridItemView.getTag();
@@ -52,6 +54,10 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
     }
 
     static class ViewHolder{
-        ImageView imgMovieThumbnail;
+        @BindView(R.id.img_movie_thumbnail) ImageView imgMovieThumbnail;
+
+        public ViewHolder(View view){
+            ButterKnife.bind(this, view);
+        }
     }
 }
