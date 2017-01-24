@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    ConnectivityManager connMgr;
+    NetworkInfo networkInfo;
+
     MoviesAdapter moviesAdapter;
     GridView gridView;
     TextView txtEmptyView;
@@ -61,14 +64,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         // Get a reference to the ConnectivityManager to check state of network connectivity
-        ConnectivityManager connMgr = (ConnectivityManager)
+        connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Get details on the currently active default data network
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-
+        networkInfo = connMgr.getActiveNetworkInfo();
         // If there is a network connection, fetch data
+
         if (networkInfo != null && networkInfo.isConnected()) {
             MoviesNetworkingTask moviesNetworkingTask = new MoviesNetworkingTask();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -89,9 +99,8 @@ public class MainActivity extends AppCompatActivity {
             // Update empty state with no connection error message
             txtEmptyView.setText(R.string.no_internet_connection);
         }
-
-
     }
+
 
     /**
      * Creating the settings menu on main activity

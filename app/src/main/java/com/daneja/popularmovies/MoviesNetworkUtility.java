@@ -31,7 +31,7 @@ public class MoviesNetworkUtility {
     public static final String TMDB_BASE_URL = "http://api.themoviedb.org/3/movie/";
     public static final String POPULAR_MOVIES_PATH = "popular";
     public static final String TOP_RATED_MOVIES_PATH = "top_rated";
-    public static final String API_KEY = "<Your Api Key>";
+    public static final String API_KEY = "855b2402bca400facdda2c0c850e6f59";
 
     /**
      * Gets the data for a single movie by its id embedded in the requestUrl
