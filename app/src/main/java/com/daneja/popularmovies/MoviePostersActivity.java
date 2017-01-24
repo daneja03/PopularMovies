@@ -19,6 +19,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.daneja.popularmovies.MoviesNetworkUtility.API_KEY;
 import static com.daneja.popularmovies.MoviesNetworkUtility.POPULAR_MOVIES_PATH;
 import static com.daneja.popularmovies.MoviesNetworkUtility.TMDB_BASE_URL;
@@ -33,15 +36,15 @@ public class MoviePostersActivity extends AppCompatActivity implements MoviePost
 
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
-
     MoviesAdapter moviesAdapter;
-    GridView gridView;
-    TextView txtEmptyView;
-    ProgressBar progressBar;
-
     SharedPreferences preferences;
-
     String currentPreferenceValue;
+
+    @BindView(R.id.gridview) GridView gridView;
+    @BindView(R.id.txt_empty_grid)TextView txtEmptyView;
+    @BindView(R.id.pgb_grid_loading)ProgressBar loadingIndicator;
+
+
     /*static String lastSelectedPreference = null;
     static boolean isPreferenceChanged = false;
 
@@ -59,7 +62,7 @@ public class MoviePostersActivity extends AppCompatActivity implements MoviePost
 
     @Override
     public void onTaskCompleted(List<Movie> movies) {
-        progressBar.setVisibility(View.GONE);
+        loadingIndicator.setVisibility(View.GONE);
 
         if (movies != null) {
             moviesAdapter = new MoviesAdapter(MoviePostersActivity.this, movies);
@@ -82,9 +85,7 @@ public class MoviePostersActivity extends AppCompatActivity implements MoviePost
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        gridView = (GridView) findViewById(R.id.gridview);
-        txtEmptyView = (TextView) findViewById(R.id.txt_empty_grid);
-        progressBar = (ProgressBar) findViewById(R.id.pgb_grid_loading);
+        ButterKnife.bind(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         //preferences.registerOnSharedPreferenceChangeListener(this);
@@ -129,7 +130,6 @@ public class MoviePostersActivity extends AppCompatActivity implements MoviePost
         } else {
             // Otherwise, display error
             // First, hide loading indicator so error message will be visible
-            View loadingIndicator = findViewById(R.id.pgb_grid_loading);
             loadingIndicator.setVisibility(View.GONE);
 
             // Update empty state with no connection error message

@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.daneja.popularmovies.MoviesNetworkUtility.API_KEY;
 import static com.daneja.popularmovies.MoviesNetworkUtility.TMDB_BASE_URL;
 
@@ -21,8 +24,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
 
-    TextView txtEmptyView;
-    ProgressBar progressBar;
+    @BindView(R.id.txt_empty_view) TextView txtEmptyView;
+    @BindView(R.id.pgb_movie_detail) ProgressBar progressBar;
+    @BindView(R.id.img_movie_thumbnail) ImageView movieThumbnail;
+    @BindView(R.id.detail_content) View contentView;
+    @BindView(R.id.img_movie_backdrop) ImageView movieBackdropImage;
+    @BindView(R.id.txt_movie_title) TextView movieTitle;
+    @BindView(R.id.txt_genres) TextView movieGenres;
+    @BindView(R.id.txt_votes_heading) TextView movieVotesHeading;
+    @BindView(R.id.txt_rating_heading) TextView movieRatingHeading;
+    @BindView(R.id.txt_votes) TextView movieVotes;
+    @BindView(R.id.txt_rating) TextView movieVotesAverage;
+    @BindView(R.id.txt_overview_heading) TextView movieOverviewHeading;
+    @BindView(R.id.txt_overview) TextView movieOverview;
+    @BindView(R.id.txt_release_date) TextView movieReleaseDate;
 
     ConnectivityManager connectivityManager;
     NetworkInfo networkInfo;
@@ -32,9 +47,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        txtEmptyView = (TextView) findViewById(R.id.txt_empty_view);
-        progressBar = (ProgressBar) findViewById(R.id.pgb_movie_detail);
-
+        ButterKnife.bind(this);
     }
 
 
@@ -54,7 +67,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             movieDetailAsyncTask.execute(tmdbMovieDetailUrl);
         }
         else {
-            View contentView = findViewById(R.id.detail_content);
             contentView.setVisibility(View.GONE);
             txtEmptyView.setText(getString(R.string.no_internet_connection));
             progressBar.setVisibility(View.GONE);
@@ -68,47 +80,28 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         progressBar.setVisibility(View.GONE);
 
         if (movie != null) {
-            ImageView movieThumbnail = (ImageView) findViewById(R.id.img_movie_thumbnail);
+
             Picasso.with(MovieDetailActivity.this)
                     .load(movie.getThumbnailImageUrl())
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.error)
                     .into(movieThumbnail);
 
-            ImageView movieBackdropImage = (ImageView) findViewById(R.id.img_movie_backdrop);
             Picasso.with(MovieDetailActivity.this)
                     .load(movie.getBackdropPath())
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.error)
                     .into(movieBackdropImage);
 
-            TextView movieTitle = (TextView) findViewById(R.id.txt_movie_title);
             movieTitle.setText(movie.getTitle());
-
-            TextView movieGenres = (TextView) findViewById(R.id.txt_genres);
             movieGenres.setText(movie.getGenres());
-
-            TextView movieVotesHeading = (TextView) findViewById(R.id.txt_votes_heading);
             movieVotesHeading.setText(getString(R.string.votes_heading));
-
-            TextView movieRatingHeading = (TextView) findViewById(R.id.txt_rating_heading);
             movieRatingHeading.setText(getString(R.string.rating_heading));
-
-            TextView movieVotes = (TextView) findViewById(R.id.txt_votes);
             movieVotes.setText(movie.getVoteCount() + "");
-
-            TextView movieVotesAverage = (TextView) findViewById(R.id.txt_rating);
             movieVotesAverage.setText(movie.getVoteAverage() + "");
-
-            TextView movieOverviewHeading = (TextView) findViewById(R.id.txt_overview_heading);
             movieOverviewHeading.setText(getString(R.string.synopsis_heading));
-
-            TextView movieOverview = (TextView) findViewById(R.id.txt_overview);
             movieOverview.setText(movie.getOverview());
-
-            TextView movieReleaseDate = (TextView) findViewById(R.id.txt_release_date);
             movieReleaseDate.setText(getString(R.string.prefix_released) + movie.getReleaseDate());
-
         }
         else {
             txtEmptyView.setText(getString(R.string.no_movies_found));
