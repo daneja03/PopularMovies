@@ -8,12 +8,11 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,11 +35,11 @@ public class MoviePostersActivity extends AppCompatActivity implements MoviePost
 
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
-    MoviesAdapter moviesAdapter;
+    MoviePostersAdapter moviesAdapter;
     SharedPreferences preferences;
     String currentPreferenceValue;
 
-    @BindView(R.id.gridview) GridView gridView;
+    @BindView(R.id.recyclerView)RecyclerView recyclerView;
     @BindView(R.id.txt_empty_grid)TextView txtEmptyView;
     @BindView(R.id.pgb_grid_loading)ProgressBar loadingIndicator;
 
@@ -65,10 +64,9 @@ public class MoviePostersActivity extends AppCompatActivity implements MoviePost
         loadingIndicator.setVisibility(View.GONE);
 
         if (movies != null) {
-            moviesAdapter = new MoviesAdapter(MoviePostersActivity.this, movies);
-
-            gridView.setEmptyView(txtEmptyView);
-            gridView.setAdapter(moviesAdapter);
+            moviesAdapter = new MoviePostersAdapter(this, movies);
+            //recyclerView.setEmptyView(txtEmptyView);
+            recyclerView.setAdapter(moviesAdapter);
         } else {
             Log.e(LOG_TAG, getString(R.string.no_movies_found));
             txtEmptyView.setText(getString(R.string.no_movies_found));
@@ -87,21 +85,12 @@ public class MoviePostersActivity extends AppCompatActivity implements MoviePost
 
         ButterKnife.bind(this);
 
+        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(this, 300);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(4));
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         //preferences.registerOnSharedPreferenceChangeListener(this);
-
-        //Set the onItemClickListener for this gridview
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MoviePostersActivity.this, MovieDetailActivity.class);
-                Movie clieckedMovie = moviesAdapter.getItem(position);
-                intent.putExtra("id", clieckedMovie.getId());
-                startActivity(intent);
-            }
-        });
-
-
     }
 
     @Override
