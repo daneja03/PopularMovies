@@ -75,11 +75,6 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:textAppearanceSmall" />
 
-                    <TextView
-                        android:id="@+id/txt_genres"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:textAppearanceSmall" />
 
                 </LinearLayout>
 
@@ -105,8 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/heading_text_view_layout_margin"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textStyle="bold" />
+                        android:textAppearance="?android:textAppearanceMedium"></TextView>
 
                     <TextView
                         android:id="@+id/txt_rating"
@@ -130,8 +124,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/heading_text_view_layout_margin"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textStyle="bold" />
+                        android:textAppearance="?android:textAppearanceMedium"></TextView>
 
                     <TextView
                         android:id="@+id/txt_votes"

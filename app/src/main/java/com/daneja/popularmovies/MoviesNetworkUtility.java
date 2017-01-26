@@ -34,23 +34,6 @@ public class MoviesNetworkUtility {
     public static final String API_KEY = "855b2402bca400facdda2c0c850e6f59";
 
     /**
-     * Gets the data for a single movie by its id embedded in the requestUrl
-     * @param requestUrl
-     * @return
-     */
-    public static Movie fetchMovieById(String requestUrl) {
-        URL url = createUrl(requestUrl);
-        String jsonResponse = null;
-        try {
-            jsonResponse = makeHttpRequest(url);
-        } catch (IOException exception) {
-            Log.e(LOG_TAG, "Error occured while making the request.", exception);
-        }
-        Movie movie = extraMovieDataFromJson(jsonResponse);
-        return movie;
-    }
-
-    /**
      * Gets the popular or top rated movies from the movie db.
      * @param requestUrl
      * @return
@@ -87,63 +70,6 @@ public class MoviesNetworkUtility {
     }
 
     /**
-     * Prepare a comma separated string of genres from the JsonArray
-     * @param name
-     * @return
-     * @throws JSONException
-     */
-    private static String getCommaSeparatedStringForJsonArray(JSONArray name) throws JSONException {
-        if (name.length() > 0) {
-            StringBuilder nameBuilder = new StringBuilder();
-
-            for (int i = 0; i < name.length(); i++) {
-                JSONObject genre = name.getJSONObject(i);
-                String genreStr = genre.getString("name");
-                nameBuilder.append(" " + genreStr).append(",");
-            }
-
-            nameBuilder.deleteCharAt(0);
-            nameBuilder.deleteCharAt(nameBuilder.length() - 1);
-
-            return nameBuilder.toString();
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Extract the Movie object from the raw json resturned from the api call
-     * @param jsonResponse
-     * @return
-     */
-    private static Movie extraMovieDataFromJson(String jsonResponse) {
-        if (TextUtils.isEmpty(jsonResponse)) {
-            return null;
-        }
-
-        Movie movie = null;
-        try {
-            JSONObject movieObject = new JSONObject(jsonResponse);
-            int id = movieObject.getInt("id");
-            String posterPath = movieObject.getString("poster_path");
-            String backdropPath = movieObject.getString("backdrop_path");
-            JSONArray genresArray = movieObject.getJSONArray("genres");
-            String genres = getCommaSeparatedStringForJsonArray(genresArray);
-            String homepagePath = movieObject.getString("homepage");
-            String title = movieObject.getString("title");
-            String overview = movieObject.getString("overview");
-            Double userRating = movieObject.getDouble("vote_average");
-            int voteCount = movieObject.getInt("vote_count");
-            String releaseDateString = movieObject.getString("release_date");
-            String releaseDate = formatDate(releaseDateString);
-            movie = new Movie(id, title, overview, posterPath, releaseDate, userRating, voteCount, backdropPath, genres, homepagePath);
-        } catch (JSONException exception) {
-            Log.e(LOG_TAG, "Unable to parse moves json response:", exception);
-        }
-        return movie;
-    }
-
-    /**
      * Extract the movies list object from the raw json returned from api call
      * @param jsonResponse
      * @return
@@ -161,11 +87,18 @@ public class MoviesNetworkUtility {
                 JSONObject movieObject = results.getJSONObject(i);
                 int id = movieObject.getInt("id");
                 String posterPath = movieObject.getString("poster_path");
-                Movie movie = new Movie(id, posterPath);
+                String backdropPath = movieObject.getString("backdrop_path");
+                String title = movieObject.getString("title");
+                String overview = movieObject.getString("overview");
+                Double userRating = movieObject.getDouble("vote_average");
+                int voteCount = movieObject.getInt("vote_count");
+                String releaseDateString = movieObject.getString("release_date");
+                String releaseDate = formatDate(releaseDateString);
+                Movie movie = new Movie(id, title, overview, posterPath, releaseDate, userRating, voteCount, backdropPath);
                 movies.add(movie);
             }
         } catch (JSONException exception) {
-            Log.e(LOG_TAG, "Unable to parse moves json response:", exception);
+            Log.e(LOG_TAG, "Unable to parse movies json response:", exception);
         }
         return movies;
     }

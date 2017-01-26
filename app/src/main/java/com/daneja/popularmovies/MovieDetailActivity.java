@@ -17,10 +17,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.daneja.popularmovies.MoviesNetworkUtility.API_KEY;
-import static com.daneja.popularmovies.MoviesNetworkUtility.TMDB_BASE_URL;
-
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailOnTaskCompleted {
+public class MovieDetailActivity extends AppCompatActivity {
 
     private final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
 
@@ -30,7 +27,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @BindView(R.id.detail_content) View contentView;
     @BindView(R.id.img_movie_backdrop) ImageView movieBackdropImage;
     @BindView(R.id.txt_movie_title) TextView movieTitle;
-    @BindView(R.id.txt_genres) TextView movieGenres;
     @BindView(R.id.txt_votes_heading) TextView movieVotesHeading;
     @BindView(R.id.txt_rating_heading) TextView movieRatingHeading;
     @BindView(R.id.txt_votes) TextView movieVotes;
@@ -61,10 +57,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         if(networkInfo != null && networkInfo.isConnected()){
             txtEmptyView.setText("");
             Intent intent = getIntent();
-            int id = intent.getIntExtra("id", 0);
-            String tmdbMovieDetailUrl = TMDB_BASE_URL + id + "?api_key=" + API_KEY;
-            MovieDetailAsyncTask movieDetailAsyncTask = new MovieDetailAsyncTask(this);
-            movieDetailAsyncTask.execute(tmdbMovieDetailUrl);
+            Movie movie = intent.getParcelableExtra("movie");
+            setUpMovieDetailView(movie);
         }
         else {
             contentView.setVisibility(View.GONE);
@@ -74,8 +68,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         }
     }
 
-    @Override
-    public void onTaskCompleted(Movie movie) {
+    private void setUpMovieDetailView(Movie movie) {
 
         progressBar.setVisibility(View.GONE);
 
@@ -94,7 +87,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     .into(movieBackdropImage);
 
             movieTitle.setText(movie.getTitle());
-            movieGenres.setText(movie.getGenres());
             movieVotesHeading.setText(getString(R.string.votes_heading));
             movieRatingHeading.setText(getString(R.string.rating_heading));
             movieVotes.setText(movie.getVoteCount() + "");

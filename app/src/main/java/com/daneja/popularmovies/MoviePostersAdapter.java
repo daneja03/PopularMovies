@@ -105,7 +105,7 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDetailActivity.class);
-                intent.putExtra("id", movie.getId());
+                intent.putExtra("movie", movie);
                 context.startActivity(intent);
             }
         });
