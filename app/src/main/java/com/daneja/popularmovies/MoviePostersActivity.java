@@ -41,6 +41,7 @@ public class MoviePostersActivity extends AppCompatActivity implements LoaderMan
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
     MoviePostersAdapter moviesAdapter;
+    LoaderManager loaderManager;
     SharedPreferences preferences;
     String currentPreferenceValue;
     String tmdbUrl;
@@ -51,6 +52,88 @@ public class MoviePostersActivity extends AppCompatActivity implements LoaderMan
     TextView txtEmptyView;
     @BindView(R.id.pgb_grid_loading)
     ProgressBar loadingIndicator;
+
+    /**
+     * onCreate method of the main activity
+     *
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
+
+        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(this, 300);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(4));
+
+        moviesAdapter = new MoviePostersAdapter(this, new ArrayList<Movie>());
+        recyclerView.setAdapter(moviesAdapter);
+
+
+        loaderManager = getLoaderManager();
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get details on the currently active default data network
+        networkInfo = connMgr.getActiveNetworkInfo();
+        // If there is a network connection, initialize loader
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            loaderManager.initLoader(MOVIES_LOADER_ID, null, this);
+        } else {
+            // Otherwise, display error
+            // First, hide loading indicator so error message will be visible
+            loadingIndicator.setVisibility(View.GONE);
+
+            // Update empty state with no connection error message
+            txtEmptyView.setText(R.string.no_internet_connection);
+        }
+    }
+
+
+    /**
+     * Creating the settings menu on main activity
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    /**
+     * perform actions when settings menu option is clicked
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.movie_settings) {
+            Intent preferenceIntent = new Intent(this, SettingsActivity.class);
+            startActivity(preferenceIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -93,10 +176,10 @@ public class MoviePostersActivity extends AppCompatActivity implements LoaderMan
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
         moviesAdapter.clear();
-        loadingIndicator.setVisibility(View.GONE);
 
         if (movies != null) {
             moviesAdapter.addMovies(movies);
+            loadingIndicator.setVisibility(View.GONE);
         } else {
             Log.e(LOG_TAG, getString(R.string.no_movies_found));
             txtEmptyView.setText(getString(R.string.no_movies_found));
@@ -113,84 +196,6 @@ public class MoviePostersActivity extends AppCompatActivity implements LoaderMan
     @Override
     public void onLoaderReset(Loader<List<Movie>> loader) {
         moviesAdapter.clear();
-    }
-
-    /**
-     * onCreate method of the main activity
-     *
-     * @param savedInstanceState
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        ButterKnife.bind(this);
-
-        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(this, 300);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new SpacesItemDecoration(4));
-
-        moviesAdapter = new MoviePostersAdapter(this, new ArrayList<Movie>());
-        recyclerView.setAdapter(moviesAdapter);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Get a reference to the ConnectivityManager to check state of network connectivity
-        connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        // Get details on the currently active default data network
-        networkInfo = connMgr.getActiveNetworkInfo();
-        // If there is a network connection, initialize loader
-
-        if (networkInfo != null && networkInfo.isConnected()) {
-            LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(MOVIES_LOADER_ID, null, this);
-        } else {
-            // Otherwise, display error
-            // First, hide loading indicator so error message will be visible
-            loadingIndicator.setVisibility(View.GONE);
-
-            // Update empty state with no connection error message
-            txtEmptyView.setText(R.string.no_internet_connection);
-        }
-    }
-
-
-    /**
-     * Creating the settings menu on main activity
-     *
-     * @param menu
-     * @return
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    /**
-     * perform actions when settings menu option is clicked
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.movie_settings) {
-            Intent preferenceIntent = new Intent(this, SettingsActivity.class);
-            startActivity(preferenceIntent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 
